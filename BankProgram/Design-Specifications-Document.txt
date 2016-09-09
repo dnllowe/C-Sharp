@@ -34,7 +34,7 @@ This document will outline the design considerations for BankProgram, including 
 
 SYSTEM OVERVIEW
 ===============
-BankProgram is a software program designed to allow users to interact with their banking information in a secure and intuitive interface. All customer information is held by the client and the user can make appropriate interactions with this database, such as withdrawing funds, depositing funds, checking statement balances, and requesting support.
+BankProgram is a software program designed to allow users to interact with their banking information in a secure and intuitive interface. All customer information is held by the client and the user can make appropriate interactions with this database, such as withdrawing funds, depositing funds, checking statement balances, transfering funds to another customer's account, and requesting support.
 
 
 DESIGN CONSIDERATIONS
@@ -45,6 +45,7 @@ Assumptions
 -----------
 -Users have access to a PC running windows to run the program.
 -Users are aware that they are not accessing real money and will, therefore, not get too excited if they deposit one million dollars into their bank account.
+-Since users can input erroneous information (because it is a console application and not a terminal with a keypad restricting input), there will need to be extra consideration for error handling.
 -The software will not need to run on any devices that cannot compile C# or console-based applications.
 -The client loves me and gave me an infinite deadline just because I'm so awesome.
 -The software does not need any additional security measures other than requesting that the user input their PIN number before accessing their account
