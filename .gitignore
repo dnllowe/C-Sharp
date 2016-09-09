@@ -3,6 +3,7 @@
 
 # User-specific files
 BankProgram/*
+!BankProgram/Design-Specifications-Document.txt
 BankProgram/BankProgram/*
 !BankProgram/BankProgram/
 !BankProgram/BankProgram/*.cs

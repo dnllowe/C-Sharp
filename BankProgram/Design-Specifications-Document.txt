@@ -1,0 +1,96 @@
+Software Design Specification - BankProgram
+===========================================
+
+Table of Contents
+	Introduction
+	System Overview
+	Design Considerations
+		Assumptions and Dependencies
+		General Constraints
+		Goals and Guidelines
+		Development Methods
+	Architectural Strategies
+	System Architecture
+		Subsystem Architecture
+	Policies and Tactices
+	Detailed System Design
+		Detailed Subsystem Design
+	Glossary
+	Bibliography
+
+
+INTRODUCTION
+============
+
+Purpose:
+Define the functionality of the BankProgram software and a high-level look at the implementation
+
+Intended Audience:
+All stakeholders. Software developers, agency project managers, account services, client product managers
+
+Summary:
+This document will outline the design considerations for BankProgram, including assumptions regarding its use, any constraints outlined by both the client and agency, the end-goal and deliverable, and the methods used to develop the software.
+
+
+SYSTEM OVERVIEW
+===============
+BankProgram is a software program designed to allow users to interact with their banking information in a secure and intuitive interface. All customer information is held by the client and the user can make appropriate interactions with this database, such as withdrawing funds, depositing funds, checking statement balances, and requesting support.
+
+
+DESIGN CONSIDERATIONS
+=====================
+BankProgram will be implemented using C# because that's the language I'm learning (it says so right there in the GitHub directory). For simplicity, BankProgram will be a console application, with no graphical user interface. Instead, users will input commands from the command console. This is enough to simulate an entire ATM experience, minus the on-screen touch and physical keypad.
+
+Assumptions
+-----------
+-Users have access to a PC running windows to run the program.
+-Users are aware that they are not accessing real money and will, therefore, not get too excited if they deposit one million dollars into their bank account.
+-The software will not need to run on any devices that cannot compile C# or console-based applications.
+-The client loves me and gave me an infinite deadline just because I'm so awesome.
+-The software does not need any additional security measures other than requesting that the user input their PIN number before accessing their account
+-You're OK that I made this as a text document. We all know how to format pretty Word Docs.
+-The software does not require any network functionality.
+-This will be fun.
+
+General Constraints
+-------------------
+-Just the limits of my own knowledge of C#
+-My first language was C++, so I have to get used to not deleting objects created with 'new'
+
+Goals and Guidelines
+--------------------
+-BankProgram must be free of bugs (even when dealing with fake money, we must be held accountable)
+
+
+ARCHITECTURAL STRATEGIES
+========================
+-Designed in C# to enhance developer's knowledge of the language
+
+
+SYSTEM ARCHITECTURE
+===================
+-I learned programming to make games, so we're going to follow that approach. Different user interactions on different points during the service will be split in "Scene" classes, such as the WelcomeScene, WithdrawScene, DepositScene, etc. Not only will this make the division of labor for the program more organized, were BankProgram to evolve into a graphic application, thinking in terms of separate scenes could increase performance, as only one scene's assets need to be in memory at once. 
+
+As such, it is best to describe the architecture in terms of the scenes
+-A welcome scene will greet the user and request a PIN before access to the account can be granted
+-Separate scenes will handle the user's requests, such as depositing funds, withdrawing funds, checking their statement, transfering money to another customer's account, and requesting help with the terminal.
+
+
+DETAILED SYSTEM DESIGN
+======================
+
+Please refer to the source code for detailed documentation on the various classes, methods, and members.
+
+
+GLOSSARY
+========
+Nothing too complicated up there, right?
+
+
+BIBLIOGRAPHY
+============
+
+Appleton B. A Software Design Specification Template. http://www.bradapp.com/docs/sdd.html
+
+
+
