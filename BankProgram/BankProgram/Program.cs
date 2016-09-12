@@ -10,6 +10,8 @@ namespace BankProgram
     {
         static void Main(string[] args)
         {
+            Customer c = new Customer();
+            return;
         }
     }
 }
