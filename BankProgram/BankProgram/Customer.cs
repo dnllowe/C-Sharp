@@ -12,8 +12,21 @@ namespace BankProgram
 {
     class Customer
     {
-        public Customer()
-        { 
+        Customer(string firstNameInput, string lastNameInput, int streetNumberInput, string streetAddressInput, string cityInput, STATE stateInput, 
+                 string zipInput, string primaryPhoneInput, string secondaryPhoneInput, string emailInput)
+        {
+            //These inputs should be checked for validity in the program prior to creating a new customer object
+            firstName = firstNameInput;
+            lastName = lastNameInput;
+            streetNumber = streetNumberInput;
+            streetAddress = streetAddressInput;
+            city = cityInput;
+            state = stateInput;
+            email = emailInput;
+            zip = zipInput.ToCharArray();
+            primaryPhone = primaryPhoneInput.ToCharArray();
+            secondaryPhone = secondaryPhoneInput.ToCharArray();
+
             //Make sure Customer PIN number intializes to 4 digits when creating new account.
             pin = new char[4];
 
@@ -41,19 +54,20 @@ namespace BankProgram
             }
 
             //Necessary SQL connection info is in system_info.xml. Manually change source code for your own MySQL Server, or create your own "system_info.xml" file
+            XmlDocument xDoc = new XmlDocument();
             xDoc.Load("../../system_info.xml");
             string server = xDoc.SelectSingleNode("system_info/server").InnerText;
             string userID = xDoc.SelectSingleNode("system_info/userID").InnerText;
             string database = xDoc.SelectSingleNode("system_info/database").InnerText;
             string port = xDoc.SelectSingleNode("system_info/port").InnerText;
-            string password = xDoc.SelectSingleNode("system_info/password").InnerText;
+            string sqlPassword = xDoc.SelectSingleNode("system_info/password").InnerText;
             
             string connectionInput = string.Format(
                 "server={0}; " +
                 "user={1}; " +
                 "database={2}; " +
                 "port={3}; " +
-                "password={4}; ", server, userID, database, port, password
+                "password={4}; ", server, userID, database, port, sqlPassword
                 );
 
             MySqlConnection mySql = new MySqlConnection(connectionInput);
@@ -75,15 +89,19 @@ namespace BankProgram
                 Console.ReadLine();
             }
 
+            MySqlCommand cmd;
+
             //Can only create table once, or exception is thrown. Catch to avoid error / crash
             try
             {
-                MySqlCommand cmd = new MySqlCommand(
+                cmd = new MySqlCommand(
                     "create table customer_accounts " +
                     "(id int unsigned auto_increment," +
                     "balance decimal(17,2)," +
                     "account_status varchar(255)," +
                     "pin varchar(4)," +
+                    "username varchar(255)," +
+                    "password varchar(255)," +
                     "first_name varchar(255)," +
                     "last_name varchar(255)," +
                     "street_number int unsigned," +
@@ -109,16 +127,32 @@ namespace BankProgram
                 }                   
             }
 
-            id = nextUniqueID;
-            nextUniqueID++;
-        }
+            cmd = new MySqlCommand(
+                string.Format("insert into customer_accounts " +
+                "(balance, account_status, pin, first_name, last_name," +
+                "street_number, street_address, city, state, zip," +
+                "primary_phone, secondary_phone, email)" +
+                "values ({0},{1},{2},{3},{4},{5},{6},{7}," +
+                "{8},{9},{10},{11},{12},{13};", 0.00, "ACTIVE", pin.ToString(), firstName,
+                lastName, streetNumber, streetAddress, city, state.ToString(), zip.ToString(),
+                primaryPhone, secondaryPhone, email), mySql);
 
-        static int nextUniqueID; //The static unique ID ensures all customer accounts have a different ID. This will increment after each customer account, and be stored on the SQL server.
+            cmd.ExecuteNonQuery();
+
+            cmd = new MySqlCommand(
+                "select id from customer_accounts " +
+                "order by id desc limit 1;", mySql);
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            id = (int)(reader["id"]);
+        }
 
         int id;
         int balance; //Customer balance. If negative, account status should be set to OVER_DRAWN
         public ACCOUNT_STATUS accountStatus;
         char[] pin; //Customer PIN. Number can only be 4 digits
+        string username;
+        string password;
         string firstName;
         string lastName;
         int streetNumber;
@@ -144,12 +178,6 @@ namespace BankProgram
             SD, TN, TX, UT, VT,
             VA, WA, WV, WI, WY
         };
-
-        
-        
-        XmlDocument xDoc = new XmlDocument();
-        XmlNodeList xNL;
-        XmlNode xNode;
     }
 
 }

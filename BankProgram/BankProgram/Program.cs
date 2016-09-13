@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace BankProgram
 {
@@ -10,7 +11,12 @@ namespace BankProgram
     {
         static void Main(string[] args)
         {
-            Customer c = new Customer();
+            Director director = Director.GetInstance();
+            director.ChangeScene(new WelcomeScene());
+
+            while (director.GetCurrentScene().IsRunning())
+                Director.GetInstance().RunScene();
+            
             return;
         }
     }

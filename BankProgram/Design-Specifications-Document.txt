@@ -50,6 +50,7 @@ Assumptions
 -The client loves me and gave me an infinite deadline just because I'm so awesome.
 -The software does not need any additional security measures other than requesting that the user input their PIN number before accessing their account
 -You're OK that I made this as a text document. We all know how to format pretty Word Docs.
+-The software is intended exclusively for a US-audience, and does not conform to international numbering schemes or measurements
 -The software does not require any network functionality.
 -This will be fun.
 
