@@ -8,6 +8,10 @@ namespace BankProgram
 {
     class Director
     {
+        protected Director()
+        {
+        }
+
         public static Director GetInstance()
         {
             if (instance == null)

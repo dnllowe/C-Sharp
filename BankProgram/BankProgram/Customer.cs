@@ -26,7 +26,8 @@ namespace BankProgram
             zip = zipInput.ToCharArray();
             primaryPhone = primaryPhoneInput.ToCharArray();
             secondaryPhone = secondaryPhoneInput.ToCharArray();
-
+            balance = 0.00f;
+            
             //Make sure Customer PIN number intializes to 4 digits when creating new account.
             pin = new char[4];
 
@@ -138,7 +139,7 @@ namespace BankProgram
                 primaryPhone, secondaryPhone, email), mySql);
 
             cmd.ExecuteNonQuery();
-
+            accountStatus = ACCOUNT_STATUS.ACTIVE;
             cmd = new MySqlCommand(
                 "select id from customer_accounts " +
                 "order by id desc limit 1;", mySql);
@@ -148,7 +149,7 @@ namespace BankProgram
         }
 
         int id;
-        int balance; //Customer balance. If negative, account status should be set to OVER_DRAWN
+        float balance; //Customer balance. If negative, account status should be set to OVER_DRAWN
         public ACCOUNT_STATUS accountStatus;
         char[] pin; //Customer PIN. Number can only be 4 digits
         string username;

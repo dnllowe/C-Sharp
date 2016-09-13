@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <prompts>
-	<greeting>Welcome to Bank of C# :)&#xA;&#xD;How may we assist you? </greeting>
-  <main_menu>1. Deposit Funds&#xA;&#xD;2. Withdraw Funds&#xA;&#xD;3. Get Balance Statment&#xA;&#xD;4. Create New Account&#xA;&#xD;&#xA;&#xD;Please Enter a Number and Press 'Enter'</main_menu>
-  <error_enter_number>Error. Please Enter a Number and Press 'Enter'</error_enter_number>
-  <enter_first_name>Please enter your first name</enter_first_name>
-  <enter_last_name>Please enter your last name</enter_last_name>
+	<greeting>Welcome to Bank of C# :) </greeting>
+  <assist>How may we assist you?</assist>
+  <main_menu>1. Deposit Funds&#xA;&#xD;2. Withdraw Funds&#xA;&#xD;3. Get Balance Statment&#xA;&#xD;4. Create New Account</main_menu>
+  <enter_number>Please Enter a Number and Press 'Enter' </enter_number>
+  <error>Error. </error>
+  <enter_first_name>Please enter your first name. </enter_first_name>
+  <enter_last_name>Please enter your last name. </enter_last_name>
 </prompts>

@@ -15,7 +15,7 @@ namespace BankProgram
             director.ChangeScene(new WelcomeScene());
 
             while (director.GetCurrentScene().IsRunning())
-                Director.GetInstance().RunScene();
+                director.RunScene();
             
             return;
         }
