@@ -207,10 +207,11 @@ namespace BankProgram
         {
             XmlDocument xDoc = new XmlDocument();
             xDoc.Load(xmlPath);
-            return xDoc.SelectSingleNode("prompts/" + node).InnerText;
+            return xDoc.SelectSingleNode(xmlRootNode + node).InnerText;
         }
 
         string xmlPath = "../../strings.xml";
+        protected string xmlRootNode = "prompts/";
         protected bool isRunning = false; //Switch for if any scene is running
     }
 }

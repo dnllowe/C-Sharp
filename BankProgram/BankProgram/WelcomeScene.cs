@@ -11,6 +11,9 @@ namespace BankProgram
         public WelcomeScene()
         {
             isRunning = true;
+
+            //Update based on strings.xml root structure
+            xmlRootNode += "welcome/";
         }
 
         public override void RunScene(float framesPerSecond)
