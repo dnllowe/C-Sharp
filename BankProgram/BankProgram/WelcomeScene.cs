@@ -18,8 +18,9 @@ namespace BankProgram
 
         public override void RunScene(float framesPerSecond)
         {
-            int selection;
-            string originalInput;
+            string selectionString;
+            int? selection = null;
+
             Console.WriteLine(GetXmlText("greeting"));
             Console.WriteLine(GetXmlText("assist"));
             Console.WriteLine();
@@ -27,26 +28,32 @@ namespace BankProgram
             Console.WriteLine();
             Console.WriteLine(GetXmlText("enter_number"));
 
-            while (!GetIntInput(out selection, out originalInput) || selection > 5 || selection < 0)
+            bool isSelectionValid = false;
+            do
             {
-                //If the user tried tying the phrase from the menu, allow it using the first letter (since all are unique)
-                //Make sure there is something in the originalInput
-
-                try
+                //User didn't enter blank
+                if (GetStringInput(out selectionString))
                 {
-                    switch (originalInput[0])
+                    //Assume true, will set to false if all cases fail
+                    isSelectionValid = true;
+
+                    //Check if user typed in phrase, or number along with phrase, or number + '.'
+                    switch (selectionString[0])
                     {
                         //DEPOSIT FUNDS
+                        case '1':
                         case 'd':
                         case 'D':
                             selection = 1;
                             break;
                         //WITHDRAW FUNDS
+                        case '2':
                         case 'w':
                         case 'W':
                             selection = 2;
                             break;
                         //GET BALANCE STATEMENT
+                        case '3':
                         case 'g':
                         case 'G':
                         case 'b':
@@ -56,6 +63,7 @@ namespace BankProgram
                             selection = 3;
                             break;
                         //CREATE NEW ACCOUNT
+                        case '4':
                         case 'c':
                         case 'C':
                         case 'n':
@@ -66,8 +74,9 @@ namespace BankProgram
                             break;
                         //INVALID INPUT
                         default:
+                            isSelectionValid = false;
                             Console.WriteLine();
-                            Console.WriteLine(GetXmlText("error") + GetXmlText("enter_number"));
+                            Console.WriteLine(GetXmlText("error"));
                             Console.WriteLine();
                             Console.WriteLine(GetXmlText("assist"));
                             Console.WriteLine();
@@ -76,31 +85,22 @@ namespace BankProgram
                             break;
                     }
                 }
-                catch(Exception e)
+                //User entered blank
+                else
                 {
-                    //If user didn't provide any input, go through loop again
-                    if (originalInput == "")
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine(GetXmlText("error") + GetXmlText("enter_number"));
-                        Console.WriteLine();
-                        Console.WriteLine(GetXmlText("assist"));
-                        Console.WriteLine();
-                        Console.WriteLine(GetXmlText("main_menu"));
-                        Console.WriteLine();
-                    }
-
-                    else
-                        throw (e);
+                    Console.WriteLine(GetXmlText("error"));
+                    Console.WriteLine();
+                    Console.WriteLine(GetXmlText("assist"));
+                    Console.WriteLine();
+                    Console.WriteLine(GetXmlText("main_menu"));
+                    Console.WriteLine();
                 }
-
-                //Break out of loop if above cases were true
-                if (selection == 1 || selection == 2 || selection == 3 || selection == 4)
-                    break;
             }
+            while (!isSelectionValid);
 
             //Lower selection by one so it matches up to enumerated types
-            selection--;
+            if(selection != null)
+                selection--;
 
             Director director = Director.GetInstance();
 

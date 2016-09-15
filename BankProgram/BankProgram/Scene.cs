@@ -31,7 +31,7 @@ namespace BankProgram
         public bool GetStringInput(out string newString)
         {
             newString = Console.ReadLine();
-            if (newString == null)
+            if (newString == "")
                 return false;
             else
                 return true;
@@ -44,30 +44,24 @@ namespace BankProgram
             bool isInputValid = false;
 
             //Make sure all characters are numeric (remove letters, commas, and anything after a decimal)
-            for (int iii = 0; iii < input.Count(); iii++)
+            for (int iii = 0; iii < input.Length; iii++)
             {
+                //Just using to get result from int.TryParse()
                 int result;
 
                 //If the element is not numeric
                 if(!int.TryParse(input[iii].ToString(), out result))
-                { 
-                    //Remove non-numeric characters
-                    if (input[iii] != '.')
+                {
+                    //Remove commas from input
+                    //NOTE: THIS WOULD NEED TO LOOK FOR '.' FOR INTERNATIONAL USE
+                    if (input[iii] == ',')
                         input = input.Remove(iii, 1);
-                    else
-                        input = input.Remove(iii);
                 }
             }
 
-            //If any characters are left, the input is valid
-            if (input.Count() > 0)
-            {
+            //If any characters are left, and they are all numeric, the input is valid
+            if (input.Length > 0 && int.TryParse(input, out newInt))
                 isInputValid = true;
-
-                //If the prase fails, then the input is still invalid
-                if (int.TryParse(input, out newInt) == false)
-                    isInputValid = false;
-            }
 
             //Return an obviously wrong result if user provided wrong input.
             else
@@ -84,30 +78,24 @@ namespace BankProgram
             bool isInputValid = false;
 
             //Make sure all characters are numeric (remove letters, commas, and anything after a decimal)
-            for (int iii = 0; iii < input.Count(); iii++)
+            for (int iii = 0; iii < input.Length; iii++)
             {
+                //Just using to get result from int.TryParse()
                 int result;
 
                 //If the element is not numeric
                 if (!int.TryParse(input[iii].ToString(), out result))
                 {
-                    //Remove non-numeric characters
-                    if (input[iii] != '.')
+                    //Remove commas from input
+                    //NOTE: THIS WOULD NEED TO LOOK FOR '.' FOR INTERNATIONAL USE
+                    if (input[iii] == ',')
                         input = input.Remove(iii, 1);
-                    else
-                        input = input.Remove(iii);
                 }
             }
 
-            //If any characters are left, the input is valid
-            if (input.Count() > 0)
-            {
+            //If any characters are left, and they are all numeric, the input is valid
+            if (input.Length > 0 && int.TryParse(input, out newInt))
                 isInputValid = true;
-
-                //If the prase fails, then the input is still invalid
-                if (int.TryParse(input, out newInt) == false)
-                    isInputValid = false;
-            }
 
             //Return an obviously wrong result if user provided wrong input.
             else
@@ -116,41 +104,46 @@ namespace BankProgram
             return isInputValid;
         }
 
-        public bool GetFloatInput(out float newFloat)
+        public bool GetFloatInput(out float newFloat, int precision = 2)
         {
             bool isInputValid = false;
             string input = Console.ReadLine();
 
+            //Make sure input only contains one decimal points
+            //NOTE: THIS WOULD NEED TO LOOK FOR ',' FOR INTERNATIONAL USE
+            int decimalCount = 0;
+            for (int iii = 0; iii < input.Length; iii++)
+            {
+                if (input[iii] == '.')
+                    decimalCount++;
+            }
+
             //Make sure all characters are numeric (remove letters, commas, and anything two places after a decimal)
-            for (int iii = 0; iii < input.Count(); iii++)
+            for (int iii = 0; iii < input.Length; iii++)
             {
                 float result;
 
                 //If the element is not numeric
                 if(!float.TryParse(input[iii].ToString(), out result))
                 {
-                    //Remove non-numeric characters
-                    if (input[iii] != '.')
+                    //Remove commas
+                    //NOTE: THIS WOULD NEED TO LOOK FOR '.' FOR INTERNATIONAL USE
+                    if (input[iii] == ',')
                         input = input.Remove(iii, 1);
 
-                    //Get rid of anything further than two decimal places out
+                    //Get rid of anything further than the specified decimal precision
+                    //NOTE: THIS WOULD NEED TO LOOK FOR ',' FOR INTERNATIONAL USE
                     else
                     {
-                        if(iii + 2 < input.Count())
+                        if(iii + precision < input.Length)
                             input = input.Remove(iii + 2);
                     }
                 }
             }
 
-            //If any characters are left, the input is valid
-            if (input.Count() > 0)
-            {
+            //If any characters are left, and they are all able to parse, and only one decimal provided, the input is valid
+            if (input.Length > 0 && float.TryParse(input, out newFloat) && decimalCount < 2)
                 isInputValid = true;
-
-                //If the prase fails, then the input is still invalid
-                if (float.TryParse(input, out newFloat) == false)
-                    isInputValid = false;
-            }
 
             //Return an obviously wrong result if user provided wrong input.
             else
@@ -159,42 +152,47 @@ namespace BankProgram
             return isInputValid;
         }
 
-        public bool GetFloatInput(out float newFloat, out string originalInput)
+        public bool GetFloatInput(out float newFloat, out string originalInput, int precision = 2)
         {
             bool isInputValid = false;
             string input = Console.ReadLine();
             originalInput = input;
 
+            //Make sure input only contains one decimal points
+            //NOTE: THIS WOULD NEED TO LOOK FOR ',' FOR INTERNATIONAL USE
+            int decimalCount = 0;
+            for (int iii = 0; iii < input.Length; iii++)
+            {
+                if (input[iii] == '.')
+                    decimalCount++;
+            }
+
             //Make sure all characters are numeric (remove letters, commas, and anything two places after a decimal)
-            for (int iii = 0; iii < input.Count(); iii++)
+            for (int iii = 0; iii < input.Length; iii++)
             {
                 float result;
 
                 //If the element is not numeric
                 if (!float.TryParse(input[iii].ToString(), out result))
                 {
-                    //Remove non-numeric characters
-                    if (input[iii] != '.')
+                    //Remove commas
+                    //NOTE: THIS WOULD NEED TO LOOK FOR '.' FOR INTERNATIONAL USE
+                    if (input[iii] == ',')
                         input = input.Remove(iii, 1);
 
-                    //Get rid of anything further than two decimal places out
+                    //Get rid of anything further than the specified decimal precision
+                    //NOTE: THIS WOULD NEED TO LOOK FOR ',' FOR INTERNATIONAL USE
                     else
                     {
-                        if (iii + 2 < input.Count())
+                        if (iii + precision < input.Length)
                             input = input.Remove(iii + 2);
                     }
                 }
             }
 
-            //If any characters are left, the input is valid
-            if (input.Count() > 0)
-            {
+            //If any characters are left, and they are all able to parse, and only one decimal provided, the input is valid
+            if (input.Length > 0 && float.TryParse(input, out newFloat) && decimalCount < 2)
                 isInputValid = true;
-
-                //If the prase fails, then the input is still invalid
-                if (float.TryParse(input, out newFloat) == false)
-                    isInputValid = false;
-            }
 
             //Return an obviously wrong result if user provided wrong input.
             else

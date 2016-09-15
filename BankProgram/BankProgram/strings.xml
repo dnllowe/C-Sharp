@@ -4,22 +4,25 @@
     <greeting>Welcome to Bank of C# :) </greeting>
     <assist>How may we assist you?</assist>
     <main_menu>1. Deposit Funds&#xA;&#xD;2. Withdraw Funds&#xA;&#xD;3. Get Balance Statment&#xA;&#xD;4. Create New Account</main_menu>
-    <enter_number>Please Enter a Number and Press 'Enter' </enter_number>
-    <error>Error. </error>
+    <enter_number>Please enter an option and press 'Enter' </enter_number>
+    <error>Error. Please enter a valid option and press 'Enter' </error>
   </welcome>
   <create_account>
-    <enter_first_name>Please enter your first name. </enter_first_name>
-    <enter_last_name>Please enter your last name. </enter_last_name>
-    <enter_username>Enter a username. </enter_username>
+    <enter_username>Please enter a username. </enter_username>
     <username_taken>Sorry, this username has alreay been taken. Please enter another username. </username_taken>
+    <enter_first_name>Enter your first name. </enter_first_name>
+    <enter_last_name>Enter your last name. </enter_last_name>
     <enter_street_address>Enter your street address (ex. 123 Main Street). </enter_street_address>
     <enter_city>Enter the city you live in. </enter_city>
     <enter_state>Enter the 2-letter abbreviation for the state you live in (ex, NY). </enter_state>
     <invalid_state>Please use the 2-letter abbreviation for your state. </invalid_state>
     <enter_zip>Enter your 5-digit ZIP code</enter_zip>
-    <enter_email>Enter your e-mail address. </enter_email>]
-    <enter_primary_phone>Enter your primary phone-number</enter_primary_phone>
-    <enter_secondary_phone>Enter your secondary phone-number (optional)</enter_secondary_phone>
+    <invalid_zip>The ZIP code you entered is invalid. </invalid_zip>
+    <enter_email>Enter your e-mail address. </enter_email>
+    <invalid_email>Please enter a valid e-mail address. </invalid_email>
+    <enter_primary_phone>Enter your 10-digit primary phone-number (ex (555-555-5555)</enter_primary_phone>
+    <invalid_phone>The number you entered is invalid. </invalid_phone>
+    <enter_secondary_phone>Enter your 10-digit secondary phone-number (optional)</enter_secondary_phone>
     <error>Error. </error>
   </create_account>
 </prompts>
