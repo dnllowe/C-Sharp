@@ -12,8 +12,10 @@ namespace BankProgram
         {
             isRunning = true;
 
-            //Update based on strings.xml root structure
-            xmlRootNode += "welcome/";
+            //Update based on desired xml root structure
+            defaultXmlPath = "../../strings.xml";
+            defaultXmlRootNode = "prompts";
+            defaultXmlElement = "welcome";
         }
 
         public override void RunScene(float framesPerSecond)

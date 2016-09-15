@@ -29,10 +29,13 @@ namespace BankProgram
             {
                 if (currentScene == null)
                 {
-                    Console.WriteLine("Current Scene is null. " + e.Message);
+                    Console.WriteLine("New Scene was unable to load. " + e.Message);
+                    Console.WriteLine("Returning to Main Menu");
                     Console.ReadLine();
-                    throw (e);
+                    ChangeScene(new WelcomeScene());
                 }
+                else
+                    throw;
             }
             return;
         }

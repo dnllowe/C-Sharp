@@ -204,12 +204,27 @@ namespace BankProgram
         public string GetXmlText(string node)
         {
             XmlDocument xDoc = new XmlDocument();
-            xDoc.Load(xmlPath);
-            return xDoc.SelectSingleNode(xmlRootNode + node).InnerText;
+            xDoc.Load(defaultXmlPath);
+
+            //Sub-nodes not used, root node > node > data
+            if(defaultXmlElement == "")
+                return xDoc.SelectSingleNode(defaultXmlRootNode + "/" + node).InnerText;
+
+            //Sub-nodes used, root node > node > ... > node > data
+            else
+                return xDoc.SelectSingleNode(defaultXmlRootNode + "/" + defaultXmlElement + "/" + node).InnerText;
         }
 
-        string xmlPath = "../../strings.xml";
-        protected string xmlRootNode = "prompts/";
+        public string GetXmlText(string xmlPath, string node)
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load(xmlPath);
+            return xDoc.SelectSingleNode(node).InnerText;
+        }
+
+        protected string defaultXmlPath = "../../strings.xml";
+        protected string defaultXmlRootNode = "prompts";
+        protected string defaultXmlElement = "";
         protected bool isRunning = false; //Switch for if any scene is running
     }
 }

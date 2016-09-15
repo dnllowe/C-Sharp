@@ -23,6 +23,7 @@
     <enter_primary_phone>Enter your 10-digit primary phone-number (ex (555-555-5555)</enter_primary_phone>
     <invalid_phone>The number you entered is invalid. </invalid_phone>
     <enter_secondary_phone>Enter your 10-digit secondary phone-number (optional)</enter_secondary_phone>
+    <account_created>Congratulations! Your account has been created. Your username, password, and PIN have been e-mailed to: </account_created>
     <error>Error. </error>
   </create_account>
 </prompts>

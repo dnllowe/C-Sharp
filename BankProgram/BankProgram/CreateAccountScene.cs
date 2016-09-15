@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
@@ -12,8 +12,10 @@ namespace BankProgram
         {
             isRunning = true;
 
-            //Update based on strings.xml root structure
-            xmlRootNode += "create_account/";
+            //Update based on desired xml root structure
+            defaultXmlPath = "../../strings.xml";
+            defaultXmlRootNode = "prompts";
+            defaultXmlElement = "create_account";
         }
 
         public override void RunScene(float framesPerSecond)
@@ -24,7 +26,7 @@ namespace BankProgram
             }
             catch(MySqlException e)
             {
-                Console.WriteLine("MySQL Failed Connection in CreatAccountScene.cs");
+                Console.WriteLine("MySQL Failed Connection in CreatAccountScene.RunScene()");
                 throw;
             }
 
@@ -90,6 +92,8 @@ namespace BankProgram
             string email;
             string primaryPhone;
             string secondaryPhone;
+            char[] password = new char[10];
+            char[] pin = new char[4];
 
             Console.WriteLine();
             Console.WriteLine(GetXmlText("enter_username"));
@@ -267,7 +271,7 @@ namespace BankProgram
  
                 //First add all valid characters to beginning of string...
                 for (int iii = 0; iii < validChars.Count; iii++)
-                    primaryPhone = primaryPhone.Insert(iii, validChars[iii].ToString());
+                    primaryPhone = primaryPhone.Insert(iii, validChars[iii].Value);
 
                 //Now get rid of whatever the original string was to get string of validChars
                 if (primaryPhone.Length > validChars.Count)
@@ -282,7 +286,7 @@ namespace BankProgram
                     primaryPhone.CopyTo(0, areaCodeCheck, 0, 3);
                     primaryPhone.CopyTo(3, digitCheck, 0, 3);
 
-                    if (!areaCodeCheck.ToString().Contains("555") && !digitCheck.ToString().Contains("555"))
+                    if (!new string(areaCodeCheck).Contains("555") && !new string(digitCheck).Contains("555"))
                         isPhoneNumberValid = true;
                     else
                     {
@@ -298,7 +302,11 @@ namespace BankProgram
                 }
             }
             while (!isPhoneNumberValid);
-           
+
+            //Convert to (555)-555-5555 format
+            primaryPhone = primaryPhone.Insert(6, @"-");
+            primaryPhone = primaryPhone.Insert(3, @")-");
+            primaryPhone = primaryPhone.Insert(0, @"(");
 
             //Reset for next phonenumber validation
             isPhoneNumberValid = false;
@@ -320,7 +328,7 @@ namespace BankProgram
 
                     //First add all valid characters to beginning of string...
                     for (int iii = 0; iii < validChars.Count; iii++)
-                        secondaryPhone = secondaryPhone.Insert(iii, validChars[iii].ToString());
+                        secondaryPhone = secondaryPhone.Insert(iii, validChars[iii].Value);
 
                     //Now get rid of whatever the original string was to get string of validChars
                     if (secondaryPhone.Length > validChars.Count)
@@ -335,7 +343,7 @@ namespace BankProgram
                         secondaryPhone.CopyTo(0, areaCodeCheck, 0, 3);
                         secondaryPhone.CopyTo(3, digitCheck, 0, 3);
 
-                        if (!areaCodeCheck.ToString().Contains("555") && !digitCheck.ToString().Contains("555"))
+                        if (!new string(areaCodeCheck).Contains("555") && !new string(digitCheck).Contains("555"))
                             isPhoneNumberValid = true;
                         else
                         {
@@ -351,45 +359,31 @@ namespace BankProgram
                         Console.WriteLine(GetXmlText("invalid_phone"));
                     }
                 }
-               
-                
             }
             while (!isPhoneNumberValid);
 
-            //Create list of instructions for MySQL
-            List<string> instructions = new List<string>
+            //Convert to (555)-555-5555 format
+            if (secondaryPhone.Length == 10)
             {
-                "insert into customer_accounts ",
-                "set(username, first_name, last_name, ",
-                "street_address, city, state, zip, email, primary_phone, secondary_phone) ",
-                string.Format("values({0},{1},{2},{3},{4},{5},{6},{7},{8},{9});", username, firstName, lastName, 
-                    streetAddress, city, state, zip, email, primaryPhone, secondaryPhone)
-            };
-
-            return;
-
-        }
-
-        void CreateCustomerAccount(string username, string firstName, string lastName, string streetAddress, string city, string state,
-                 string zip, string primaryPhone, string secondaryPhone, string email)
-        {
-            /* Inputs should be checked for validity in the program prior to creating a new customer account */
+                secondaryPhone = secondaryPhone.Insert(6, @"-");
+                secondaryPhone = secondaryPhone.Insert(3, @")-");
+                secondaryPhone = secondaryPhone.Insert(0, @"(");
+            }
 
             System.Random rand = new System.Random();
 
             //Create a random, 10 digit password
-            char[] password = new char[10];
 
-            for(int iii = 0; iii < password.Length; iii++)
+            for (int iii = 0; iii < password.Length; iii++)
             {
-                int toggle = rand.Next(0, 1);
+                int toggle = rand.Next(0, 2);
 
                 //Assign character
                 if (toggle == 0)
                 {
                     //Convert int to unicode string. Convert unicode string to char array. Get first element of array (the character).
                     char nextCharacter = char.ConvertFromUtf32(rand.Next(65, 90)).ToCharArray(0, 1)[0]; //Characters for A to Z
-                    toggle = rand.Next(0, 1);
+                    toggle = rand.Next(0, 2);
 
                     //Decide if upper or lower case
                     if (toggle == 0)
@@ -408,39 +402,86 @@ namespace BankProgram
 
                 //Assign number
                 else if (toggle == 1)
-                    password[iii] = (char)(rand.Next(0, 9));
+                    password[iii] = (rand.Next(0, 9)).ToString().ToCharArray()[0];
 
             }
 
             //Assign random PIN number when creating new account. Customer can change later.
-
             //Make sure Customer PIN number intializes to 4 digits when creating new account.
-            char[] pin = new char[4];
-
             //Ensure the PIN number digits are between 0 and 9
             for (int iii = 0; iii < 4; iii++)
-                pin[iii] = (char)(rand.Next(0, 9));
+                pin[iii] = (char)(rand.Next(0, 10)).ToString().ToCharArray()[0];
+
+            string passwordString = new string(password);
+            string pinString = new string(pin);
+            Console.WriteLine(passwordString + " " + pinString);
+
+
+            //Bring this back and move to AFTER Sql statements once email has been implemented
+            /*
+            SmtpClient mailObject = new SmtpClient();
+            mailObject.Host = "smtp.mail.yahoo.com";
+            mailObject.EnableSsl = true;
+            mailObject.Timeout = 10000;
+            mailObject.DeliveryMethod = SmtpDeliveryMethod.Network;
+            mailObject.UseDefaultCredentials = false;
+
+            string smtpUsername = GetXmlText("../../system_info.xml", "system_info/smtp_username");
+            string smtpPassword = GetXmlText("../../system_info.xml", "system_info/smtp_password");
+
+            mailObject.Credentials = new System.Net.NetworkCredential(smtpUsername, smtpPassword);
+            mailObject.Port = 465;
 
             try
             {
-                MySqlHelper.ConnectToMySql();
+                mailObject.Send(
+                   from: "dnllowe@yahoo.com",
+                   recipients: email,
+                   subject: firstName + " " + lastName + ": Your new Bank of C# account has been created",
+                   body: firstName + ",\n\nThank you for choosing Bank of C#\n\nYou have successfully created a new account. " +
+                   "Your login details and PIN are below\n\n" + "username:\n" + username +
+                   "\n\npassword:\n" + password.ToString() + "\n\nPIN:\n" + pin.ToString() + "\n\nThank you for your business!"
+                       );
             }
-            catch (MySqlException e)
+            catch(Exception e)
             {
-                Console.WriteLine("MySQL Failed Connection in CreateAccountScene.CreateCustomerAccount");
-                throw (e);
+                Console.WriteLine("E-mail failure in CreateAccountScene.RunScene(). " + e);
+                throw;
             }
+            */
 
-            MySqlHelper.ExecuteNonQueryCommand(
-                string.Format("insert into customer_accounts " +
-                "(username, password, balance, account_status, pin, first_name, last_name," +
-                "street_address, city, state, zip," +
-                "primary_phone, secondary_phone, email)" +
-                "values ({0},{1},{2},{3},{4},{5},{6},{7}," +
-                "{8},{9},{10},{11},{12};", username, password, 0.00, "ACTIVE", pin.ToString(), firstName,
-                lastName, streetAddress, city, state.ToString(), zip.ToString(),
-                primaryPhone, secondaryPhone, email)
-                );
+            //Email the user their password and PIN number
+            Console.WriteLine(
+                "Your new Bank of C# account has been created!" +
+                "\nThank you for choosing Bank of C#" +
+                "\n\nYour PIN: " + new string(pin) + 
+                "\nUsername: " + username + 
+                "\nPassword: " + new string(password) +
+                "\n\nThank you for your business!");
+
+            //Create list of instructions for MySQL
+            List<string> instructions = new List<string>
+            {
+                "insert into customer_accounts ",
+                "set(username, password, pin, balance, account_status, first_name, last_name, ",
+                "street_address, city, state, zip, email, primary_phone, secondary_phone) ",
+                string.Format("values({0},{1},{2},{3 : 0.00},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13});", 
+                    username, new string(password), new string (pin), 10010.79f, 
+                    "ACTIVE", firstName, lastName, streetAddress, city, 
+                    state, zip, email, primaryPhone, secondaryPhone)
+            };
+
+            MySqlHelper.ExecuteNonQueryCommand(instructions);
+
+            //Bring this back once e-mail is set up correctly
+            /*
+            Console.WriteLine();
+            Console.WriteLine(GetXmlText("account_created" + email));
+            */
+            Director.GetInstance().ChangeScene(new WelcomeScene());
+            
+            return;
+
         }
 
         List<string> stateAbbreviations = new List<string>
