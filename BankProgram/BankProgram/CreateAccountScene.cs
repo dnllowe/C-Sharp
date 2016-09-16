@@ -47,8 +47,8 @@ namespace BankProgram
                     "city varchar(255)," +
                     "state varchar(2)," +
                     "zip varchar(5)," +
-                    "primary_phone varchar(12)," +
-                    "secondary_phone varchar(12)," +
+                    "primary_phone varchar(14)," +
+                    "secondary_phone varchar(14)," +
                     "email varchar(255)," +
                     "primary key (id));"
                     );
@@ -463,11 +463,11 @@ namespace BankProgram
             List<string> instructions = new List<string>
             {
                 "insert into customer_accounts ",
-                "set(username, password, pin, balance, account_status, first_name, last_name, ",
+                "(username, password, pin, balance, account_status, first_name, last_name, ",
                 "street_address, city, state, zip, email, primary_phone, secondary_phone) ",
-                string.Format("values({0},{1},{2},{3 : 0.00},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13});", 
-                    username, new string(password), new string (pin), 10010.79f, 
-                    "ACTIVE", firstName, lastName, streetAddress, city, 
+                string.Format("values('{0}','{1}','{2}',{3 : 0.00},'ACTIVE','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}');", 
+                    username, new string(password), new string (pin), 0.00f, 
+                    firstName, lastName, streetAddress, city, 
                     state, zip, email, primaryPhone, secondaryPhone)
             };
 
