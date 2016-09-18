@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 
 namespace BankProgram
@@ -55,7 +50,6 @@ namespace BankProgram
             reader.Read();
             id = reader.GetInt32("id");
             string pin = reader.GetString("pin");
-            string pinInput;
             currentBalance = reader.GetDecimal("balance");
             reader.Close();
 
@@ -81,7 +75,11 @@ namespace BankProgram
                 Console.WriteLine();
 
                 if (dollarsString == "" || int.TryParse(dollarsString, out dollarsToDeposit))
-                    isInputValid = true;
+                {
+                    //Can't deposit negative dollars
+                    if (dollarsToDeposit >= 0)
+                        isInputValid = true;
+                }
                 else
                 {
                     Console.WriteLine(GetXmlText(@"deposit/invalid_dollars"));
@@ -110,7 +108,7 @@ namespace BankProgram
             }
             while (!isInputValid);
 
-            amountToDeposit = dollarsToDeposit + (decimal)(centsToDeposit) / 100.00M;
+            amountToDeposit = dollarsToDeposit + centsToDeposit / 100.00M;
             newBalance = currentBalance + amountToDeposit;
             MySqlHelper.ExecuteNonQueryCommand(string.Format("update customer_accounts set balance={0} where id={1};", newBalance, id));
 

@@ -46,5 +46,7 @@
     <withdraw_dollars>How many dollars would you like to withdraw? </withdraw_dollars>
     <withdraw_cents>How many cents would you like to withdraw? </withdraw_cents>
     <invalid_cents>Invalid entry. Please enter a number between 0 and 99.</invalid_cents>
+    <success>Dispensing funds. </success>
+    <not_enough_funds>Not enough funds. </not_enough_funds>
   </withdraw>
 </prompts>
