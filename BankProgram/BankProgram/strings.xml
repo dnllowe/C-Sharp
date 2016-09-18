@@ -7,6 +7,7 @@
     <invalid_pin>The PIN does not match. </invalid_pin>
     <attempts_remaining>Attempts remaining: </attempts_remaining>
     <attempts_exceeded>You have exceeded the maximum number of attempts. Returning to Main Menu. </attempts_exceeded>
+    <new_balance>Your new balance is </new_balance>
   </general>
   <welcome>
     <greeting>Welcome to Bank of C# :) </greeting>
@@ -39,6 +40,7 @@
     <invalid_dollars>Invalid entry. Please only use numbers. </invalid_dollars>
     <deposit_cents>How many cents would you like to deposit? </deposit_cents>
     <invalid_cents>Invalid entry. Please enter a number between 0 and 99.</invalid_cents>
+    <success>Deposit received! </success>
   </deposit>
   <withdraw>
     <withdraw_dollars>How many dollars would you like to withdraw? </withdraw_dollars>

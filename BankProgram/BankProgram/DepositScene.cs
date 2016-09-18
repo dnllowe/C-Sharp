@@ -41,7 +41,7 @@ namespace BankProgram
 
                 reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
 
-                //Make sure there is data for this username
+                //Make sure there is data for this username. No rows = no data.
                 if (!reader.HasRows)
                 {
                     reader.Close();
@@ -60,27 +60,10 @@ namespace BankProgram
             reader.Close();
 
             //CHECK PIN
-            int numberOfAttempts = 0;
-            int attemptsAllowed = 5;
-            do
-            {
-                Console.WriteLine(GetXmlText("general/enter_pin"));
-                pinInput = Console.ReadLine();
-                Console.WriteLine();
-
-                if (pinInput != pin)
-                {
-                    numberOfAttempts++;
-                    Console.WriteLine(GetXmlText("general/invalid_pin"));
-                    Console.WriteLine(GetXmlText("general/attempts_remaining") + (attemptsAllowed - numberOfAttempts));
-                    Console.WriteLine();
-
-                }
-            }
-            while (pinInput != pin && (attemptsAllowed - numberOfAttempts) != 0);
+            bool isPINValid = CheckPIN(validPin: pin, attemptsAllowed: 5);
 
             //EXIT TO WELCOME SCENE IF ATTEMPTS EXCEED LIMIT
-            if ((attemptsAllowed - numberOfAttempts) == 0)
+            if (!isPINValid)
             {
                 Console.WriteLine(GetXmlText("general/attempts_exceeded"));
                 Console.WriteLine();
@@ -130,8 +113,10 @@ namespace BankProgram
             amountToDeposit = dollarsToDeposit + (decimal)(centsToDeposit) / 100.00M;
             newBalance = currentBalance + amountToDeposit;
             MySqlHelper.ExecuteNonQueryCommand(string.Format("update customer_accounts set balance={0} where id={1};", newBalance, id));
-           
-            //ADD SOME CONFIRMATION
+
+            //CONFIRMATION
+            Console.WriteLine(GetXmlText("deposit/success") + GetXmlText("general/new_balance") + string.Format("${0:0.00}", newBalance));
+            Console.WriteLine();
 
             Director.GetInstance().ChangeScene(new WelcomeScene());
             return;

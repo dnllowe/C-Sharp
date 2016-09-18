@@ -222,6 +222,35 @@ namespace BankProgram
             return xDoc.SelectSingleNode(node).InnerText;
         }
 
+        //Runs loop that requests users PIN and checks against database. Only "attemptsAllowed" failures permitted before returning false.
+        protected bool CheckPIN(string validPin, int attemptsAllowed = 5)
+        {
+            int numberOfAttempts = 0;
+            string pinInput;
+
+            do
+            {
+                Console.WriteLine(GetXmlText("general/enter_pin"));
+                pinInput = Console.ReadLine();
+                Console.WriteLine();
+
+                if (pinInput != validPin)
+                {
+                    numberOfAttempts++;
+                    Console.WriteLine(GetXmlText("general/invalid_pin"));
+                    Console.WriteLine(GetXmlText("general/attempts_remaining") + (attemptsAllowed - numberOfAttempts));
+                    Console.WriteLine();
+
+                }
+            }
+            while (pinInput != validPin && (attemptsAllowed - numberOfAttempts) != 0);
+
+            if (attemptsAllowed - numberOfAttempts == 0)
+                return false;
+            else
+                return true;
+        }
+
         protected string defaultXmlPath = "../../strings.xml";
         protected string defaultXmlRootNode = "prompts";
         protected string defaultXmlElement = "";
