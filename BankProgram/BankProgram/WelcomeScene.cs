@@ -122,6 +122,7 @@ namespace BankProgram
                     break;
             }
 
+            Console.WriteLine();
             return;
 
         }

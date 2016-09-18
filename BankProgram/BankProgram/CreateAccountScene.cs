@@ -67,7 +67,7 @@ namespace BankProgram
             MySqlDataReader reader = null;
             try
             {
-                reader = MySqlHelper.ExecuteQueryCommand("select distinct 'username' from customer_accounts;");
+                reader = MySqlHelper.ExecuteQueryCommand("select distinct username from customer_accounts;");
             }
             catch(MySqlException e)
             {
@@ -95,18 +95,20 @@ namespace BankProgram
             char[] password = new char[10];
             char[] pin = new char[4];
 
-            Console.WriteLine();
             Console.WriteLine(GetXmlText("enter_username"));
 
             bool usernameTaken = false;
+            bool isUsernameValid = false;
 
-            while (!GetStringInput(out username) || usernameTaken)
+            do
             {
+                isUsernameValid = GetStringInput(out username);
+
                 //Reset before checking
                 usernameTaken = false;
 
                 //User left field blank
-                if (username == "")
+                if (!isUsernameValid)
                 {
                     Console.WriteLine();
                     Console.WriteLine(GetXmlText("error"));
@@ -114,13 +116,14 @@ namespace BankProgram
                     Console.WriteLine(GetXmlText("enter_username"));
                 }
 
-                else if(takenUsernames.Contains(username))
+                else if (takenUsernames.Contains(username))
                 {
                     usernameTaken = true;
                     Console.WriteLine();
                     Console.WriteLine(GetXmlText("username_taken"));
                 }
             }
+            while (!isUsernameValid || usernameTaken);
 
             Console.WriteLine();
             Console.WriteLine(GetXmlText("enter_first_name"));
@@ -412,11 +415,6 @@ namespace BankProgram
             for (int iii = 0; iii < 4; iii++)
                 pin[iii] = (char)(rand.Next(0, 10)).ToString().ToCharArray()[0];
 
-            string passwordString = new string(password);
-            string pinString = new string(pin);
-            Console.WriteLine(passwordString + " " + pinString);
-
-
             //Bring this back and move to AFTER Sql statements once email has been implemented
             /*
             SmtpClient mailObject = new SmtpClient();
@@ -451,13 +449,27 @@ namespace BankProgram
             */
 
             //Email the user their password and PIN number
+            Console.WriteLine();
             Console.WriteLine(
                 "Your new Bank of C# account has been created!" +
                 "\nThank you for choosing Bank of C#" +
                 "\n\nYour PIN: " + new string(pin) + 
                 "\nUsername: " + username + 
                 "\nPassword: " + new string(password) +
+                "\nThis information has been saved to C:\\BankProgram\\account_info.txt" +
                 "\n\nThank you for your business!");
+            Console.WriteLine();
+
+            if(!System.IO.Directory.Exists(@"C:\BankProgram"))
+                System.IO.Directory.CreateDirectory(@"C:\BankProgram");
+            System.IO.StreamWriter writer = new System.IO.StreamWriter(@"C:\BankProgram\account_info.txt", true);
+            writer.WriteLine("Username: " + username);
+            writer.WriteLine("PIN: " + new string(pin)); 
+            writer.WriteLine("Password: " + new string(password));
+            writer.WriteLine();
+            writer.WriteLine();
+            writer.Flush();
+            writer.Close();
 
             //Create list of instructions for MySQL
             List<string> instructions = new List<string>

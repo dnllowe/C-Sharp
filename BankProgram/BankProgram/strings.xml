@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <prompts>
+  <general>
+    <enter_username>Please enter your username: </enter_username>
+    <invalid_username>We can't find the username: </invalid_username>
+    <enter_pin>Please enter your PIN: </enter_pin>
+    <invalid_pin>The PIN does not match. </invalid_pin>
+  </general>
   <welcome>
     <greeting>Welcome to Bank of C# :) </greeting>
     <assist>How may we assist you?</assist>
@@ -26,4 +32,15 @@
     <account_created>Congratulations! Your account has been created. Your username, password, and PIN have been e-mailed to: </account_created>
     <error>Error. </error>
   </create_account>
+  <deposit>
+    <deposit_dollars>How many dollars would you like to deposit? </deposit_dollars>
+    <invalid_dollars>Invalid entry. Please only use numbers. </invalid_dollars>
+    <deposit_cents>How many cents would you like to deposit? </deposit_cents>
+    <invalid_cents>Invalid entry. Please enter a number between 0 and 99.</invalid_cents>
+  </deposit>
+  <withdraw>
+    <withdraw_dollars>How many dollars would you like to withdraw? </withdraw_dollars>
+    <withdraw_cents>How many cents would you like to withdraw? </withdraw_cents>
+    <invalid_cents>Invalid entry. Please enter a number between 0 and 99.</invalid_cents>
+  </withdraw>
 </prompts>
