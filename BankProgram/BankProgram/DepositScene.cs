@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data;
 using MySql.Data.MySqlClient;
-using System.Text.RegularExpressions;
 
 namespace BankProgram
 {
@@ -56,10 +55,38 @@ namespace BankProgram
             reader.Read();
             id = reader.GetInt32("id");
             string pin = reader.GetString("pin");
+            string pinInput;
             currentBalance = reader.GetDecimal("balance");
             reader.Close();
 
             //CHECK PIN
+            int numberOfAttempts = 0;
+            int attemptsAllowed = 5;
+            do
+            {
+                Console.WriteLine(GetXmlText("general/enter_pin"));
+                pinInput = Console.ReadLine();
+                Console.WriteLine();
+
+                if (pinInput != pin)
+                {
+                    numberOfAttempts++;
+                    Console.WriteLine(GetXmlText("general/invalid_pin"));
+                    Console.WriteLine(GetXmlText("general/attempts_remaining") + (attemptsAllowed - numberOfAttempts));
+                    Console.WriteLine();
+
+                }
+            }
+            while (pinInput != pin && (attemptsAllowed - numberOfAttempts) != 0);
+
+            //EXIT TO WELCOME SCENE IF ATTEMPTS EXCEED LIMIT
+            if ((attemptsAllowed - numberOfAttempts) == 0)
+            {
+                Console.WriteLine(GetXmlText("general/attempts_exceeded"));
+                Console.WriteLine();
+                Director.GetInstance().ChangeScene(new WelcomeScene());
+                return;
+            }
 
             bool isInputValid = false;
 
@@ -68,6 +95,7 @@ namespace BankProgram
             {
                 Console.WriteLine(GetXmlText(@"deposit/deposit_dollars"));
                 dollarsString = Console.ReadLine();
+                Console.WriteLine();
 
                 if (dollarsString == "" || int.TryParse(dollarsString, out dollarsToDeposit))
                     isInputValid = true;
@@ -87,6 +115,7 @@ namespace BankProgram
             {
                 Console.WriteLine(GetXmlText(@"deposit/deposit_cents"));
                 centsString = Console.ReadLine();
+                Console.WriteLine();
 
                 if (centsString == "" || (int.TryParse(centsString, out centsToDeposit) && centsToDeposit >= 0 && centsToDeposit <= 99))
                     isInputValid = true;
@@ -98,8 +127,12 @@ namespace BankProgram
             }
             while (!isInputValid);
 
+            amountToDeposit = dollarsToDeposit + (decimal)(centsToDeposit) / 100.00M;
+            newBalance = currentBalance + amountToDeposit;
             MySqlHelper.ExecuteNonQueryCommand(string.Format("update customer_accounts set balance={0} where id={1};", newBalance, id));
            
+            //ADD SOME CONFIRMATION
+
             Director.GetInstance().ChangeScene(new WelcomeScene());
             return;
         }

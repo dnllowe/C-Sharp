@@ -5,6 +5,8 @@
     <invalid_username>We can't find the username: </invalid_username>
     <enter_pin>Please enter your PIN: </enter_pin>
     <invalid_pin>The PIN does not match. </invalid_pin>
+    <attempts_remaining>Attempts remaining: </attempts_remaining>
+    <attempts_exceeded>You have exceeded the maximum number of attempts. Returning to Main Menu. </attempts_exceeded>
   </general>
   <welcome>
     <greeting>Welcome to Bank of C# :) </greeting>
