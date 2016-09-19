@@ -56,42 +56,85 @@ namespace BankProgram
             return true;
         }
 
-        static public void ExecuteNonQueryCommand(string command)
+        static public void ExecuteNonQueryCommand(string command, string[] parameters)
         {
             if (!isConnected)
                 ConnectToMySql();
 
             MySqlCommand cmd = new MySqlCommand(command, mySql);
+
+            //Use parameters to protect aganist injection
+            for (int iii = 0; iii < parameters.Length; iii++)
+            {
+                string parameterName = @"@" + iii.ToString();
+                string parameterValue = parameters[iii];
+                cmd.Parameters.AddWithValue(parameterName, parameterValue);
+            }
+
             cmd.ExecuteNonQuery();
         }
 
-        static public void ExecuteNonQueryCommand(List<string>command)
+        static public void ExecuteNonQueryCommand(List<string>command, string[] parameters)
         {
             string commandList = null;
             
             for (int iii = 0; iii < command.Count(); iii++)
                 commandList += command[iii];
             MySqlCommand cmd = new MySqlCommand(commandList, mySql);
+
+            //Use parameters to protect aganist injection
+            for (int iii = 0; iii < parameters.Length; iii++)
+            {
+                string parameterName = @"@" + iii.ToString();
+                string parameterValue = parameters[iii];
+                cmd.Parameters.AddWithValue(parameterName, parameterValue);
+            }
+
             cmd.ExecuteNonQuery();
         }
-
-        static public MySqlDataReader ExecuteQueryCommand(string command)
+        
+        static public MySqlDataReader ExecuteQueryCommand(string command, string[] parameters)
         {
             if (!isConnected)
                 ConnectToMySql();
 
             MySqlCommand cmd = new MySqlCommand(command, mySql);
+
+            //Use parameters to protect aganist injection
+            for(int iii = 0; iii < parameters.Length; iii++)
+            {
+                string parameterName = @"@" + iii.ToString();
+                string parameterValue = parameters[iii];
+                cmd.Parameters.AddWithValue(parameterName, parameterValue);
+            }
+
             return cmd.ExecuteReader();
         }
 
-        static public MySqlDataReader ExecuteQueryCommand(List<string> command)
+        static public MySqlDataReader ExecuteQueryCommand(List<string> command, string[] parameters)
         {
             string commandList = null;
 
             for (int iii = 0; iii < command.Count(); iii++)
                 commandList += command[iii];
+
             MySqlCommand cmd = new MySqlCommand(commandList, mySql);
+
+            //Use parameters to protect aganist injection
+            for (int iii = 0; iii < parameters.Length; iii++)
+            {
+                string parameterName = @"@" + iii.ToString();
+                string parameterValue = parameters[iii];
+                cmd.Parameters.AddWithValue(parameterName, parameterValue);
+            }
+
+            
             return cmd.ExecuteReader();
+        }
+
+        static public MySqlConnection GetConnection()
+        {
+            return mySql;
         }
 
         static MySqlConnection mySql = null;

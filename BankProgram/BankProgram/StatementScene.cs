@@ -30,7 +30,7 @@ namespace BankProgram
                     username = Console.ReadLine();
                     Console.WriteLine();
 
-                    reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
+                    reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = @0;", new string[] { username });
 
                     //Make sure there is data for this username. No rows = no data.
                     if (!reader.HasRows)
@@ -44,7 +44,7 @@ namespace BankProgram
             }
 
             else
-                reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
+                reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = @0;", new string[] { username });
 
             //Get first (and only) record to get data from
             reader.Read();

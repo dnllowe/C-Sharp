@@ -36,8 +36,9 @@ namespace BankProgram
             //Can only create table once, or exception is thrown. Catch to avoid error / crash
             try
             {
-                MySqlHelper.ExecuteNonQueryCommand(
-                    "create table customer_accounts " +
+                MySqlConnection sql = MySqlHelper.GetConnection();
+               
+                string command = "create table customer_accounts " +
                     "(id int unsigned auto_increment," +
                     "balance decimal(17,2)," +
                     "account_status varchar(255)," +
@@ -53,8 +54,10 @@ namespace BankProgram
                     "primary_phone varchar(14)," +
                     "secondary_phone varchar(14)," +
                     "email varchar(255)," +
-                    "primary key (id));"
-                    );
+                    "primary key (id));";
+
+                MySqlCommand cmd = new MySqlCommand(command, sql);
+                cmd.ExecuteNonQuery();
             }
 
             catch (MySqlException e)
@@ -70,7 +73,10 @@ namespace BankProgram
             MySqlDataReader reader = null;
             try
             {
-                reader = MySqlHelper.ExecuteQueryCommand("select distinct username from customer_accounts;");
+                MySqlConnection sql = MySqlHelper.GetConnection();
+                string command = "select distinct username from customer_accounts;";
+                MySqlCommand cmd = new MySqlCommand(command, sql);
+                reader = cmd.ExecuteReader();
             }
             catch(MySqlException e)
             {
@@ -479,13 +485,14 @@ namespace BankProgram
                 "insert into customer_accounts ",
                 "(username, password, pin, balance, account_status, first_name, last_name, ",
                 "street_address, city, state, zip, email, primary_phone, secondary_phone) ",
-                string.Format("values('{0}','{1}','{2}',{3 : 0.00},'ACTIVE','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}');", 
-                    username, new string(password), new string (pin), 0.00f, 
-                    firstName, lastName, streetAddress, city, 
-                    state, zip, email, primaryPhone, secondaryPhone)
+                "values(@0, @1, @2, @3, @4, @5, @6, @7, @8, @9, @10, @11, @12, @13);"    
             };
 
-            MySqlHelper.ExecuteNonQueryCommand(instructions);
+            MySqlHelper.ExecuteNonQueryCommand(instructions, new string[] {
+                username, new string(password), new string(pin),
+                0.00f.ToString(), "ACTIVE", firstName, lastName, streetAddress,
+                city, state, zip, email, primaryPhone, secondaryPhone
+            });
 
             //Bring this back once e-mail is set up correctly
             /*

@@ -7,7 +7,7 @@
     <invalid_pin>The PIN does not match. </invalid_pin>
     <attempts_remaining>Attempts remaining: </attempts_remaining>
     <attempts_exceeded>You have exceeded the maximum number of attempts. Returning to Main Menu. </attempts_exceeded>
-    <new_balance>Your new balance is </new_balance>
+    <new_balance>Your new balance is $</new_balance>
     <return_to_menu>Press 'Enter' to return to Main Menu. </return_to_menu>
   </general>
   <welcome>

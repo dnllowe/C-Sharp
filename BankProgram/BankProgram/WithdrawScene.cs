@@ -36,7 +36,7 @@ namespace BankProgram
                     username = Console.ReadLine();
                     Console.WriteLine();
 
-                    reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
+                    reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = @0;", new string[] { username });
 
                     //Make sure there is data for this username. No rows = no data.
                     if (!reader.HasRows)
@@ -50,7 +50,7 @@ namespace BankProgram
             }
 
             else
-                reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
+                reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = @0;", new string[] { username });
 
             //Get first (and only) record to get data from
             reader.Read();
@@ -129,7 +129,7 @@ namespace BankProgram
 
             amountToWithdraw = dollarsToWithdraw + centsToWithdraw / 100.00M;
             newBalance = currentBalance - amountToWithdraw;
-            MySqlHelper.ExecuteNonQueryCommand(string.Format("update customer_accounts set balance={0} where id={1};", newBalance, id));
+            MySqlHelper.ExecuteNonQueryCommand("update customer_accounts set balance=@0 where id=@1;", new string[] { newBalance.ToString(), id.ToString() });
 
             //CONFIRMATION
             Console.WriteLine(GetXmlText("withdraw/success") + GetXmlText("general/new_balance") + string.Format("${0:0.00}", newBalance));

@@ -9,7 +9,7 @@ namespace BankProgram
         public bool LoadAccount(string usernameInput)
         {
             MySqlHelper.ConnectToMySql();
-            MySqlDataReader reader = MySqlHelper.ExecuteQueryCommand(string.Format("select * from customer_accounts where username = {0};", username));
+            MySqlDataReader reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = @0;", new string[] { username });
             bool accountExists = false;
 
             //If there are no rows, the record for the username does not exist.
