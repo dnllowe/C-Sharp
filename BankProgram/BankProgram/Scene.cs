@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 
 namespace BankProgram
@@ -230,15 +226,15 @@ namespace BankProgram
 
             do
             {
-                Console.WriteLine(GetXmlText("general/enter_pin"));
+                Console.WriteLine(GetXmlText(@"../../strings.xml", @"prompts/general/enter_pin"));
                 pinInput = Console.ReadLine();
                 Console.WriteLine();
 
                 if (pinInput != validPin)
                 {
                     numberOfAttempts++;
-                    Console.WriteLine(GetXmlText("general/invalid_pin"));
-                    Console.WriteLine(GetXmlText("general/attempts_remaining") + (attemptsAllowed - numberOfAttempts));
+                    Console.WriteLine(GetXmlText(@"../../strings.xml", @"prompts/general/invalid_pin"));
+                    Console.WriteLine(GetXmlText(@"../../strings.xml", @"prompts/general/attempts_remaining") + (attemptsAllowed - numberOfAttempts));
                     Console.WriteLine();
 
                 }
@@ -248,12 +244,17 @@ namespace BankProgram
             if (attemptsAllowed - numberOfAttempts == 0)
                 return false;
             else
+            {
+                isLoggedIn = true;
                 return true;
+            }
         }
 
         protected string defaultXmlPath = "../../strings.xml";
         protected string defaultXmlRootNode = "prompts";
         protected string defaultXmlElement = "";
         protected bool isRunning = false; //Switch for if any scene is running
+        static protected bool isLoggedIn = false; //Whether user has already logged in during the program session
+        static protected string username;
     }
 }

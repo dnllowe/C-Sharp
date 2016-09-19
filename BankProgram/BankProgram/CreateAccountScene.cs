@@ -12,6 +12,9 @@ namespace BankProgram
         {
             isRunning = true;
 
+            //Creating a new account implies the user is switching accounts and should sign in again
+            isLoggedIn = false;
+
             //Update based on desired xml root structure
             defaultXmlPath = "../../strings.xml";
             defaultXmlRootNode = "prompts";
@@ -82,7 +85,6 @@ namespace BankProgram
                 takenUsernames.Add(reader.GetString("username"));
             reader.Close();
 
-            string username;
             string firstName;
             string lastName;
             string streetAddress;

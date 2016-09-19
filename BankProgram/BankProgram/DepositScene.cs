@@ -18,7 +18,6 @@ namespace BankProgram
         {
             MySqlHelper.ConnectToMySql();
             MySqlDataReader reader = null;
-            string username;
             int id;
             decimal currentBalance = 0.00M;
             int dollarsToDeposit = 0;
@@ -28,23 +27,29 @@ namespace BankProgram
             string dollarsString;
             string centsString;
 
-            do
+            if (!isLoggedIn)
             {
-                Console.WriteLine(GetXmlText(@"general/enter_username"));
-                username = Console.ReadLine();
-                Console.WriteLine();
-
-                reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
-
-                //Make sure there is data for this username. No rows = no data.
-                if (!reader.HasRows)
+                do
                 {
-                    reader.Close();
-                    Console.WriteLine(GetXmlText(@"general/invalid_username") + "'{0}'", username);
+                    Console.WriteLine(GetXmlText(@"general/enter_username"));
+                    username = Console.ReadLine();
                     Console.WriteLine();
+
+                    reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
+
+                    //Make sure there is data for this username. No rows = no data.
+                    if (!reader.HasRows)
+                    {
+                        reader.Close();
+                        Console.WriteLine(GetXmlText(@"general/invalid_username") + "'{0}'", username);
+                        Console.WriteLine();
+                    }
                 }
+                while (!reader.HasRows);
             }
-            while (!reader.HasRows);
+
+            else
+                reader = MySqlHelper.ExecuteQueryCommand("select * from customer_accounts where username = '" + username + "';");
 
             //Get first (and only) record to get data from
             reader.Read();
@@ -53,16 +58,19 @@ namespace BankProgram
             currentBalance = reader.GetDecimal("balance");
             reader.Close();
 
-            //CHECK PIN
-            bool isPINValid = CheckPIN(validPin: pin, attemptsAllowed: 5);
-
-            //EXIT TO WELCOME SCENE IF ATTEMPTS EXCEED LIMIT
-            if (!isPINValid)
+            //CHECK PIN IF NOT LOGGED IN
+            if (!isLoggedIn)
             {
-                Console.WriteLine(GetXmlText("general/attempts_exceeded"));
-                Console.WriteLine();
-                Director.GetInstance().ChangeScene(new WelcomeScene());
-                return;
+                bool isPINValid = CheckPIN(validPin: pin, attemptsAllowed: 5);
+
+                //EXIT TO WELCOME SCENE IF ATTEMPTS EXCEED LIMIT
+                if (!isPINValid)
+                {
+                    Console.WriteLine(GetXmlText("general/attempts_exceeded"));
+                    Console.WriteLine();
+                    Director.GetInstance().ChangeScene(new WelcomeScene());
+                    return;
+                }
             }
 
             bool isInputValid = false;
